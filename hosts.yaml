@@ -1,0 +1,9 @@
+dbservers:
+    hosts:
+      azure-db-server:
+        ansible_host: azure-database
+
+appservers:
+     hosts:
+      azure-backend-server:
+        ansible_host: azure-backend

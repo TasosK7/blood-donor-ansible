@@ -1,0 +1,4 @@
+db:
+  name: "blooddb"
+  user: "dbuser"
+  password: "pass123"
