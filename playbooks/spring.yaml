@@ -21,22 +21,24 @@
             version: "{{ branch }}"
             force: yes
 
-      # - name: "Populate application.properties"
-      #   lineinfile:
-      #     dest: "{{ appdir }}/src/main/resources/application.properties"
-      #     state: present
-      #     regexp: "^{{item.key}}="
-      #     line: "{{item.key}}={{item.value}}"
-      #   with_items:
-      #     - "{{app.env | dict2items}}"
-      - name: "Set execute permissions on mvnw"
-        file:
-          path: "{{ appdir }}/mvnw"
-          mode: '0755'
+      - name: "Populate application.properties"
+        lineinfile:
+          dest: "{{ appdir }}/src/main/resources/application.properties"
+          state: present
+          regexp: "^{{item.key}}="
+          line: "{{item.key}}={{item.value}}"
+        with_items:
+          - "{{app.env | dict2items}}"
+      
+      
+      - name: Change permissions of mvnw script
+        command: chmod +x ./mvnw
+        args:
+          chdir: "{{ appdir }}"
         become: yes
-        
+      
       - name: "Build the Spring application"
-        command: "./mvnw package -Dmaven.test.skip "
+        command: "./mvnw package -Dmaven.test.skip"
         args:
             chdir: "{{ appdir }}"
 

@@ -5,5 +5,5 @@ dbservers:
 
 appservers:
      hosts:
-      azure-backend-server:
+      azure-app-server:
         ansible_host: azure-backend
