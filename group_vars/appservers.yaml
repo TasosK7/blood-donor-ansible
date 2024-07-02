@@ -5,4 +5,4 @@ appgroup: "azureuser"
 app_port: 7070
 backend_server_url: "http://4.211.106.115:7070"
 app:
-  VITE_BACKEND:  http://4.211.106.115
+  VITE_BACKEND:  http://4.211.106.115:7070
