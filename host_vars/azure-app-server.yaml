@@ -6,5 +6,5 @@ app:
     spring.datasource.url: jdbc:postgresql://4.233.218.48:5432/blooddb
 
 service:
-  workingdir: "/home/azureuser/spring"
+  workingdir: "{{ ansible_user_dir }}/spring"
   execstart: "java -jar target/BloodDonor-0.0.1-SNAPSHOT.jar"
