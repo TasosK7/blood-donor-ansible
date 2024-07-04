@@ -8,4 +8,6 @@ appservers:
       azure-app-server:
         ansible_host: azure-backend
       azure-frontend-server:
-        ansible_host: azure-frontend  
+        ansible_host: azure-frontend
+      azure-docker-server:
+        ansible_host: azure-docker-2  
