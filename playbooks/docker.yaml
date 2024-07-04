@@ -56,8 +56,7 @@
       become: yes
     
     - name: run docker-compose file
-      command: docker-compose up --build
-      become: yes
-    
+      command: sudo -E SSH_AUTH_SOCK=$SSH_AUTH_SOCK docker-compose up
+      become: no    
     
     
