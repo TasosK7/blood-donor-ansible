@@ -38,12 +38,25 @@
         name: docker-ce
         state: latest
         update_cache: true
+
+    - name: create docker group
+      command: groupadd docker
+      become: yes
+      ignore_errors: yes
+
+    - name: add user to docker group
+      command: sudo usermod -aG docker $USER
+      become: no 
   
     - name: Install Docker Compose
       get_url:
         url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_userspace_architecture }}"
         dest: "/usr/local/bin/docker-compose"
         mode: 'u+x,g+x'
+    
+    - name: change permissions of docker-compose
+      command: chmod +x "/usr/local/bin/docker-compose"
+      become: yes 
 
     - name: Install Docker Module for Python
       pip:
@@ -56,7 +69,7 @@
       become: yes
     
     - name: run docker-compose file
-      command: sudo -E SSH_AUTH_SOCK=$SSH_AUTH_SOCK docker-compose up
-      become: no    
-    
-    
+      command: docker-compose up
+      become: no
+
+
