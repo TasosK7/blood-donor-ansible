@@ -19,7 +19,7 @@ services:
     volumes:
       - 'blooddb:/var/lib/postgresql/data/'
   spring:
-    image: bd
+    image: ghcr.io/tasosk7/bd-backend
     build:
       context: git@github.com:alexioudim/BloodDonor.git#rest
       dockerfile: backend.Dockerfile
@@ -39,7 +39,7 @@ services:
       retries: 3
 
   frontend:
-    image: bdvue
+    image: ghcr.io/tasosk7/bd-frontend
     build:
       context: git@github.com:TasosK7/BloodDonorVue.git#docker
       dockerfile: Dockerfile
