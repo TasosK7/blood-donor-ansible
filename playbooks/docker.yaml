@@ -67,7 +67,7 @@
         src: ../files/docker-compose.yaml
         dest: "/home/azureuser/docker-compose.yaml"
       become: yes
-    
+
     - name: run docker-compose file
       command: docker-compose up
       become: no
