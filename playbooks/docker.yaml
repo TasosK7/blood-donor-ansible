@@ -1,75 +1,42 @@
 ---
-- hosts: appservers
-  become: yes
-  become_user: root
-  
-  pre_tasks:
-    - name: Install aptitude
-      apt:
-        name: aptitude
-        state: latest
-        update_cache: true
-    
-    - name: Install required system packages
-      apt:
-        pkg:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-          - python3-pip
-          - virtualenv
-          - python3-setuptools
-        state: latest
-        update_cache: true
+- name: Install basic packages
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: true
+  loop:
+    - software-properties-common
+    - curl
+    - apt-transport-https
+    - ca-certificates
 
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
+- name: get key
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -"
+  #ignore_errors: yes
 
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
-        state: present
+- name: Add docker ppa
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+    update_cache: yes
 
-    - name: Update apt and install docker-ce
-      apt:
-        name: docker-ce
-        state: latest
-        update_cache: true
+- name: install docker
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: true
+  loop:
+    - docker-ce
+    - docker-compose
 
-    - name: create docker group
-      command: groupadd docker
-      become: yes
-      ignore_errors: yes
+- name: start docker service
+  service:
+    name: docker
+    state: started
+    enabled: true
 
-    - name: add user to docker group
-      command: sudo usermod -aG docker $USER
-      become: no 
-  
-    - name: Install Docker Compose
-      get_url:
-        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system }}-{{ ansible_userspace_architecture }}"
-        dest: "/usr/local/bin/docker-compose"
-        mode: 'u+x,g+x'
-    
-    - name: change permissions of docker-compose
-      command: chmod +x "/usr/local/bin/docker-compose"
-      become: yes 
-
-    - name: Install Docker Module for Python
-      pip:
-        name: docker
-  tasks:
-    - name: copy docker-compose file
-      template:
-        src: ../files/docker-compose.yaml
-        dest: "/home/azureuser/docker-compose.yaml"
-      become: yes
-
-    - name: run docker-compose file
-      command: docker-compose up
-      become: no
-
-
+- name: adding existing user to group docker
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: yes
